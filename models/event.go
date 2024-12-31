@@ -95,3 +95,19 @@ func (e Event) UpdateEvent() error {
 
 	return err
 }
+
+func (e Event) DeleteEvent () error {
+	script := `DELETE FROM events WHERE id = ?`
+
+	stmt, err := db.DB.Prepare(script)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(e.ID)
+
+	return err
+}

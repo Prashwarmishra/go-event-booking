@@ -67,7 +67,7 @@ func UpdateEvent(context *gin.Context) {
 		return
 	}
 
-	_, err = models.GetEventById(id)
+	event, err := models.GetEventById(id)
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
@@ -77,6 +77,9 @@ func UpdateEvent(context *gin.Context) {
 	var updatedEvent models.Event
 
 	err = context.ShouldBindJSON(&updatedEvent)
+
+	updatedEvent.ID = event.ID
+	updatedEvent.UserID = event.UserID
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "bad request - unable to parse body"})
@@ -91,4 +94,30 @@ func UpdateEvent(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, gin.H{ "message": "request successful", "data": updatedEvent })
+}
+
+func DeleteEvent(context *gin.Context) {
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{ "message": "bad request - invalid event id" })
+		return
+	}
+
+	event, err := models.GetEventById(id)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{ "message": "internal server error" })
+		return
+	}
+
+	err = event.DeleteEvent()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{ "message": "internal server error" })
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{ "message": "request successful", "data": event })
+
 }
