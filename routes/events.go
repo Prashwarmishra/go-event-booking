@@ -58,3 +58,37 @@ func createEvent(context *gin.Context) {
 
 	context.JSON(http.StatusCreated, gin.H{"message": "request successful", "data": data})
 }
+
+func UpdateEvent(context *gin.Context) {
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "bad request - invalid event id"})
+		return
+	}
+
+	_, err = models.GetEventById(id)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
+		return
+	}
+
+	var updatedEvent models.Event
+
+	err = context.ShouldBindJSON(&updatedEvent)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "bad request - unable to parse body"})
+		return
+	}
+
+	err = updatedEvent.UpdateEvent()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{ "message": "request successful", "data": updatedEvent })
+}
