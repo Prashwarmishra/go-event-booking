@@ -11,7 +11,7 @@ import (
 
 func getEvents(context *gin.Context) {
 	events, err := models.GetAllEvents()
-
+	
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{ "message": err })
 		return
@@ -59,7 +59,7 @@ func createEvent(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"message": "request successful", "data": data})
 }
 
-func UpdateEvent(context *gin.Context) {
+func updateEvent(context *gin.Context) {
 	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
 
 	if err != nil {
@@ -96,7 +96,7 @@ func UpdateEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{ "message": "request successful", "data": updatedEvent })
 }
 
-func DeleteEvent(context *gin.Context) {
+func deleteEvent(context *gin.Context) {
 	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
 
 	if err != nil {
