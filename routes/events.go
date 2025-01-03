@@ -2,7 +2,6 @@ package routes
 
 import (
 	"go-event-booking/models"
-	"go-event-booking/utils"
 	"net/http"
 	"strconv"
 
@@ -40,38 +39,24 @@ func getEventById(context *gin.Context) {
 }
 
 func createEvent(context *gin.Context) {
-	token := context.Request.Header.Get("Authorization")
-
-	if token == "" {
-		context.JSON(http.StatusUnauthorized, gin.H{ "message": "unauthorized" })
-		return
-	}
-
-	err := utils.VerifyToken(token)
-
-	if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{ "message": "invalid token" })
-		return
-	}
-
 	var event models.Event
-	err = context.ShouldBindJSON(&event)
+	err := context.ShouldBindJSON(&event)
 	
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
 		return
 	}
 	
-	event.UserID = 1
+	event.UserID = context.GetInt64("userId")
 
-	data, err := event.Save()
+	err = event.Save()
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{ "message": err })
 		return
 	}
 
-	context.JSON(http.StatusCreated, gin.H{"message": "request successful", "data": data})
+	context.JSON(http.StatusCreated, gin.H{"message": "request successful", "data": event})
 }
 
 func updateEvent(context *gin.Context) {

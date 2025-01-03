@@ -12,12 +12,12 @@ type Event struct {
 	Description string `binding:"required"`
 	Location string `binding:"required"`
 	DateTime time.Time `binding:"required"`
-	UserID int
+	UserID int64
 }
 
 var events []Event
 
-func (e Event) Save() (Event, error) {
+func (e *Event) Save() error {
 	query := `
 	INSERT INTO events (name, description, location, datetime, user_id)
 	VALUES (?, ?, ?, ?, ?)
@@ -25,17 +25,17 @@ func (e Event) Save() (Event, error) {
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
 		fmt.Println("Error preparing query", err)
-		return Event{}, err
+		return err
 	}
 	defer stmt.Close()
 	result, err := stmt.Exec(e.Name, e.Description, e.Location, e.DateTime, e.UserID)
 	if err != nil {
 		fmt.Println("Error executing query", err)
-		return Event{}, err
+		return err
 	}
 	id, err := result.LastInsertId()
 	e.ID = id
-	return e, err
+	return err
 }
 
 func GetAllEvents() ([]Event, error) {

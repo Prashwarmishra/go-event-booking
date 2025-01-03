@@ -1,10 +1,10 @@
 POST http://localhost:8080/events
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2UxMjM0NUBnbWFpbC5jb20iLCJleHAiOjE3MzU5MTAwNjgsInVzZXJJZCI6NX0.P6Rn55FB4X4tARcEhcPem11-EVzyQfZskQ-YyeqnefM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2VAZ21haWwuY29tIiwiZXhwIjoxNzM1OTEzMzA1LCJ1c2VySWQiOjF9.VNIoyZmHhCGcBXJA5L0x-_4xSQOx1L2OxCm1e53zIc8
 
 {
-    "name": "Test",
-    "description": "Testing event",
+    "name": "Another Test",
+    "description": "Another Testing event",
     "location": "test",
     "dateTime": "2024-12-30T20:57:50.000Z"
 }
