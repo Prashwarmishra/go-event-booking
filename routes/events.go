@@ -70,7 +70,14 @@ func updateEvent(context *gin.Context) {
 	event, err := models.GetEventById(id)
 
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		return
+	}
+
+	userId := context.GetInt64("userId")
+
+	if userId != event.UserID {
+		context.JSON(http.StatusBadRequest, gin.H{ "message": "unauthorized" })
 		return
 	}
 
@@ -107,7 +114,14 @@ func deleteEvent(context *gin.Context) {
 	event, err := models.GetEventById(id)
 
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{ "message": "internal server error" })
+		context.JSON(http.StatusInternalServerError, gin.H{ "message": err })
+		return
+	}
+
+	userId := context.GetInt64("userId")
+
+	if userId != event.UserID {
+		context.JSON(http.StatusBadRequest, gin.H{ "message": "unauthorized" })
 		return
 	}
 
