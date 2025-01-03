@@ -47,10 +47,10 @@ func (u *User) Save() error {
 }
 
 func (u *User) ValidateUser() error {
-	query := `SELECT password FROM users WHERE email = ?`
+	query := `SELECT id, password FROM users WHERE email = ?`
 	row := db.DB.QueryRow(query, u.Email)
 	var hashedPassword string
-	err := row.Scan(&hashedPassword)
+	err := row.Scan(&u.ID, &hashedPassword)
 
 	if err != nil {
 		return err
