@@ -121,6 +121,8 @@ func (e Event) GetAllRegistrations() ([]Registation, error) {
 	if err != nil {
 		return []Registation{}, err
 	}
+
+	defer rows.Close()
 	
 	for rows.Next() {
 		var registration Registation
@@ -131,7 +133,7 @@ func (e Event) GetAllRegistrations() ([]Registation, error) {
 	return registrations, err
 } 
 
-func (e Event) CreateRegistration(userId int64) error {
+func (e *Event) CreateRegistration(userId int64) error {
 	script := `INSERT INTO registrations (event_id, user_id) values (?, ?)`
 	stmt, err := db.DB.Prepare(script)
 
@@ -142,6 +144,18 @@ func (e Event) CreateRegistration(userId int64) error {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(e.ID, userId)
+
+	return err
+}
+
+func (e *Event) CancelRegistration(userId int64) error {
+	script := `DELETE FROM registrations WHERE event_id = ? AND user_id = ?`
+
+	_, err := db.DB.Exec(script, e.ID, userId)
+
+	if err != nil {
+		return err
+	}
 
 	return err
 }
