@@ -1,2 +1,4 @@
-GET http://localhost:8080/events
+POST http://localhost:8080/events/1/registrations
+Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2VAZ21haWwuY29tIiwiZXhwIjoxNzM1OTIxNzkwLCJ1c2VySWQiOjF9.rnpoFcsEY7CFke_ptGfsr2dt5hiQD60h7xUpV7fIpbU
+

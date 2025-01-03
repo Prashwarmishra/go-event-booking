@@ -111,3 +111,37 @@ func (e Event) DeleteEvent () error {
 
 	return err
 }
+
+func (e Event) GetAllRegistrations() ([]Registation, error) {
+	script := `SELECT * FROM registrations WHERE event_id = ?`
+
+	rows, err := db.DB.Query(script, e.ID)
+	registrations := []Registation{}
+	
+	if err != nil {
+		return []Registation{}, err
+	}
+	
+	for rows.Next() {
+		var registration Registation
+		rows.Scan(&registration.ID, &registration.EventId, &registration.UserId)
+		registrations = append(registrations, registration)
+	}
+	
+	return registrations, err
+} 
+
+func (e Event) CreateRegistration(userId int64) error {
+	script := `INSERT INTO registrations (event_id, user_id) values (?, ?)`
+	stmt, err := db.DB.Prepare(script)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(e.ID, userId)
+
+	return err
+}
